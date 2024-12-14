@@ -2,4 +2,21 @@
 
 - the project implements modular architecture
 - learn how to use controller in developing api using ASP.NET Core
-- clone and run with `dotnet run .`
+- run migrations using
+
+  ```bash
+  dotnet ef migrations add InitialCreate --startup-project GusPizza.API
+  dotnet ef database update --startup-project GusPizza.API
+  ```
+
+- undo the migrations
+
+  ```bash
+  dotnet ef migrations remove --startup-project GusPizza.API
+  ```
+
+- run with
+
+  ```bash
+  dotnet run --porject GusPizza.API
+  ```

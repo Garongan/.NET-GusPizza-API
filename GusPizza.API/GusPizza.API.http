@@ -1,0 +1,6 @@
+@GusPizza.API_HostAddress = http://localhost:5290
+
+GET {{GusPizza.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
