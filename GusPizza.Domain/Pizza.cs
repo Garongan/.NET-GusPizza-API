@@ -2,21 +2,13 @@ using System;
 
 namespace GusPizza.Domain;
 
-public class Pizza
+public class Pizza(string name, decimal price)
 {
-    public Guid Id { get; set; }
-    public string Name { get; set; }
-    public decimal Price { get; set; }
-    public bool IsAvailable { get; set; }
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string Name { get; set; } = name;
+    public decimal Price { get; set; } = price;
+    public bool IsAvailable { get; set; } = true;
 
-    private Pizza() { }
-    public Pizza(string name, decimal price)
-    {
-        Id = Guid.NewGuid();
-        Name = name;
-        Price = price;
-        IsAvailable = true;
-    }
     public void Update(string name, decimal price)
     {
         Name = name;

@@ -1,3 +1,4 @@
 namespace GusPizza.Application;
 
-public record PizzaDto(Guid Id, string Name, decimal Price, bool IsAvailable);
+public record PizzaDtoRequest(string Name, decimal Price);
+public record PizzaDtoResponse(Guid Id, string Name, decimal Price, bool IsAvailable);

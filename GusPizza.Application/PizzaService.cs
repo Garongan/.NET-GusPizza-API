@@ -1,3 +1,4 @@
+
 using GusPizza.Domain;
 
 namespace GusPizza.Application;
@@ -6,15 +7,34 @@ public class PizzaService(IPizzaRepository repository)
 {
     private readonly IPizzaRepository pizzaRepository = repository;
 
-    public async Task<List<PizzaDto>> GetAll()
+    public async Task<Pizza> GetById(Guid id)
     {
-        var pizzas = await pizzaRepository.GetAll();
-        return pizzas.Select(pizza => new PizzaDto(pizza.Id, pizza.Name, pizza.Price, pizza.IsAvailable)).ToList();
+        var pizza = await pizzaRepository.GetById(id);
+        return pizza;
+    }
+    public async Task<List<Pizza>> GetAll()
+    {
+        return await pizzaRepository.GetAll();
     }
 
-    public async Task Create(string name, decimal price)
+    public async Task<Pizza> Create(string name, decimal price)
     {
         var pizza = new Pizza(name, price);
         await pizzaRepository.Add(pizza);
+        return pizza;
+    }
+
+    public async Task<Pizza> Update(Guid id, string name, decimal price)
+    {
+        var pizza = await GetById(id);
+        pizza.Name = name;
+        pizza.Price = price;
+        await pizzaRepository.Update(pizza);
+        return pizza;
+    }
+
+    public async Task Delete(Guid id)
+    {
+        await pizzaRepository.Delete(id);
     }
 }
