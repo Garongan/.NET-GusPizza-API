@@ -1,7 +1,14 @@
 # Basic CRUD for pizza api using .NET
 
-- the project implements modular architecture
+- the project implements DDD (Domain Driven Design) architecture
 - learn how to use controller in developing api using ASP.NET Core
+- learn how to documented API with Swashbuckle Swagger
+- learn how to create jwt auth using dotnet
+- learn how to authorize user by role
+- create basic CRUD operation for pizza endpoint
+
+# How to run this API locally
+
 - clone this project and run `dotnet restore`
 
 - run migrations using
