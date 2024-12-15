@@ -1,24 +1,27 @@
 using GusPizza.Application;
+using GusPizza.Application.Services.Interfaces;
 using GusPizza.Shared;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace GusPizza.API
+namespace GusPizza.API.Controllers
 {
     [Route("api/pizzas")]
     [ApiController]
-    public class PizzaController(PizzaService service) : ControllerBase
+    public class PizzaController(IPizzaService service) : ControllerBase
     {
-        private readonly PizzaService pizzaService = service;
+        private readonly IPizzaService pizzaService = service;
 
         /// <summary>
         /// Get all pizza
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        [Authorize(Roles = "Admin,User")]
+        public async Task<IActionResult> GetAllAsync()
         {
-            var pizzas = await pizzaService.GetAll();
-            var responses = pizzas.Select(p => new PizzaDtoResponse(p.Id, p.Name, p.Price, p.IsAvailable)).ToList();
+            var pizzas = await pizzaService.GetAllAsync();
+            var responses = pizzas.Select(p => new PizzaDtoResponse(p.Id, p.Name, p.Price, p.IsAvailable, p.CreatedAt, p.UpdatedAt)).ToList();
             var response = CommonResponse<List<PizzaDtoResponse>>.commonResponse(
                 StatusCodes.Status200OK,
                 "List of pizzas retrieved successfully",
@@ -33,13 +36,14 @@ namespace GusPizza.API
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPost]
-        public async Task<IActionResult> Create([FromBody] PizzaDtoRequest request)
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CreateAsync([FromBody] PizzaDtoRequest request)
         {
-            var pizza = await pizzaService.Create(request.Name, request.Price);
+            var pizza = await pizzaService.CreateAsync(request.Name, request.Price);
             var response = CommonResponse<PizzaDtoResponse>.commonResponse(
                 StatusCodes.Status201Created,
                 "Pizza created successfully",
-                new PizzaDtoResponse(pizza.Id, pizza.Name, pizza.Price, pizza.IsAvailable)
+                new PizzaDtoResponse(pizza.Id, pizza.Name, pizza.Price, pizza.IsAvailable, pizza.CreatedAt, pizza.UpdatedAt)
             );
             return Created($"api/pizzas/{pizza.Id}", response);
         }
@@ -50,13 +54,13 @@ namespace GusPizza.API
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetById(Guid id)
+        public async Task<IActionResult> GetByIdAsync(Guid id)
         {
-            var pizza = await pizzaService.GetById(id);
+            var pizza = await pizzaService.GetByIdAsync(id);
             var response = CommonResponse<PizzaDtoResponse>.commonResponse(
                 StatusCodes.Status200OK,
                 "Pizzas retrieved successfully",
-                new PizzaDtoResponse(pizza.Id, pizza.Name, pizza.Price, pizza.IsAvailable)
+                new PizzaDtoResponse(pizza.Id, pizza.Name, pizza.Price, pizza.IsAvailable, pizza.CreatedAt, pizza.UpdatedAt)
             );
             return Ok(response);
         }
@@ -68,13 +72,13 @@ namespace GusPizza.API
         /// <param name="request"></param>
         /// <returns></returns>
         [HttpPut("{id}")]
-        public async Task<IActionResult> Update(Guid id, [FromBody] PizzaDtoRequest request)
+        public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] PizzaDtoRequest request)
         {
-            var pizza = await pizzaService.Update(id, request.Name, request.Price);
+            var pizza = await pizzaService.UpdateAsync(id, request.Name, request.Price);
             var response = CommonResponse<PizzaDtoResponse>.commonResponse(
                 StatusCodes.Status200OK,
                 "Pizza updated successfully",
-                new PizzaDtoResponse(pizza.Id, pizza.Name, pizza.Price, pizza.IsAvailable)
+                new PizzaDtoResponse(pizza.Id, pizza.Name, pizza.Price, pizza.IsAvailable, pizza.CreatedAt, pizza.UpdatedAt)
             );
             return Ok(response);
         }
@@ -85,9 +89,9 @@ namespace GusPizza.API
         /// <param name="id"></param>
         /// <returns></returns>
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> DeleteAsync(Guid id)
         {
-            await pizzaService.Delete(id);
+            await pizzaService.DeleteAsync(id);
             var response = CommonResponse<string>.commonResponse(
                 StatusCodes.Status200OK,
                 "Pizza deleted successfully",

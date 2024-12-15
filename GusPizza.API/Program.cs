@@ -1,6 +1,6 @@
 using System.Reflection;
-using GusPizza.Application;
-using GusPizza.Domain;
+using GusPizza.API;
+using GusPizza.Application.Services.Interfaces;
 using GusPizza.Infrastructure;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -14,11 +14,31 @@ builder.Services.AddDbContext<AppDBContext>(options => options.UseMySql(
     b => b.MigrationsAssembly("GusPizza.API")
 ));
 
-// repository config
-builder.Services.AddScoped<IPizzaRepository, PizzaRepository>();
+// dependency injection config
+builder.Services.AddApi();
 
-// service config
-builder.Services.AddScoped<PizzaService>();
+// authentication config
+builder.Services.AddAuthentication(options =>
+{
+    options.DefaultAuthenticateScheme = "Bearer";
+    options.DefaultChallengeScheme = "Bearer";
+})
+.AddJwtBearer("Bearer", options =>
+{
+    var jwtSettings = builder.Configuration.GetSection("Jwt");
+    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = jwtSettings["Issuer"],
+        ValidAudience = jwtSettings["Audience"],
+        IssuerSigningKey = new Microsoft.IdentityModel.Tokens.SymmetricSecurityKey(
+            System.Text.Encoding.UTF8.GetBytes(jwtSettings["Key"] ?? throw new InvalidOperationException("JWT key is not configured."))
+        )
+    };
+});
 
 // swagger config
 builder.Services.AddEndpointsApiExplorer();
@@ -31,8 +51,32 @@ builder.Services.AddSwaggerGen(c =>
         Description = "Api for manage order pizza in GusPizza"
     });
     c.IncludeXmlComments(Assembly.GetExecutingAssembly());
+
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Please insert JWT with Bearer into field"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement{
+        {
+            new OpenApiSecurityScheme{
+                Reference = new OpenApiReference{
+                    Type = ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+
 });
 
+builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 
 var app = builder.Build();
@@ -45,9 +89,17 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = string.Empty;
         c.SwaggerEndpoint("/swagger/v1/swagger.json", "GusPizza API v1");
     });
+    app.UseHttpsRedirection();
+    app.MapControllers();
 }
 
-app.UseHttpsRedirection();
-app.MapControllers();
+app.UseAuthentication();
+app.UseAuthorization();
+
+using (var scope = app.Services.CreateScope())
+{
+    var userService = scope.ServiceProvider.GetRequiredService<IUserService>();
+    await userService.AddAdminIfNoExistsAsync();
+}
 
 app.Run();

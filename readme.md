@@ -7,14 +7,13 @@
 - run migrations using
 
   ```bash
-  dotnet ef migrations add InitialCreate --startup-project GusPizza.API
-  dotnet ef database update --startup-project GusPizza.API
+  dotnet ef database update --project GusPizza.API
   ```
 
 - undo the migrations
 
   ```bash
-  dotnet ef migrations remove --startup-project GusPizza.API
+  dotnet ef migrations remove --project GusPizza.API
   ```
 
 - run with
