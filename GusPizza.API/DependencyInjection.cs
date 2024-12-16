@@ -1,8 +1,8 @@
 using GusPizza.Application.Services;
-using GusPizza.Application.Services.Interfaces;
 using GusPizza.Domain.Repositories;
 using GusPizza.Infrastructure;
-using GusPizza.Infrastructure.Repositories;
+using GusPizza.Infrastructure.Persistence.Repositories;
+using GusPizza.Infrastructure.Services;
 
 namespace GusPizza.API;
 

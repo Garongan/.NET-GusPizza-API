@@ -1,7 +1,7 @@
 using System.Reflection;
 using GusPizza.API;
-using GusPizza.Application.Services.Interfaces;
-using GusPizza.Infrastructure;
+using GusPizza.Application.Services;
+using GusPizza.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
@@ -11,7 +11,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDBContext>(options => options.UseMySql(
     builder.Configuration.GetConnectionString("DefaultConnection"),
     new MySqlServerVersion(new Version(8, 0, 39)),
-    b => b.MigrationsAssembly("GusPizza.API")
+    b => b.MigrationsAssembly("GusPizza.Infrastructure")
 ));
 
 // dependency injection config

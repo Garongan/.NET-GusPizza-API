@@ -1,12 +1,11 @@
 
-using GusPizza.Application.Services.Interfaces;
+using GusPizza.Application.Services;
 using GusPizza.Domain;
 using GusPizza.Domain.Entities;
 using GusPizza.Domain.Repositories;
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
-using Microsoft.AspNetCore.Identity;
 
-namespace GusPizza.Application.Services;
+namespace GusPizza.Infrastructure.Services;
 
 public class UserService(IUserRepository repository) : IUserService
 {
@@ -16,12 +15,7 @@ public class UserService(IUserRepository repository) : IUserService
         var admin = await userRepository.GetByUsernameAsync("admin");
         if (admin == null)
         {
-            var newAdmin = new User
-            {
-                Username = "admin",
-                PasswordHash = HashPassword("password"),
-                Role = Roles.Admin.ToString()
-            };
+            var newAdmin = new User("admin", HashPassword("password"), Roles.Admin.ToString());
             await userRepository.AddAsync(newAdmin);
         }
     }
@@ -45,5 +39,30 @@ public class UserService(IUserRepository repository) : IUserService
             prf: KeyDerivationPrf.HMACSHA256,
             iterationCount: 100000,
             numBytesRequested: 256 / 8));
+    }
+
+    public async Task<User> AddAsync(string username, string password)
+    {
+        var newUser = new User(username, HashPassword(password), Roles.User.ToString());
+        await userRepository.AddAsync(newUser);
+        return newUser;
+    }
+
+    public async Task UpdateAsync(Guid id, string username)
+    {
+        var user = await GetByIdAsync(id);
+        user.Username = username;
+        user.UpdatedAt = DateTime.UtcNow;
+        await userRepository.UpdateAsync(user);
+    }
+
+    public async Task<User> GetByIdAsync(Guid id)
+    {
+        return await userRepository.GetByIdAsync(id);
+    }
+
+    public async Task<List<User>> GetAllAsync()
+    {
+        return await userRepository.GetAllAsync();
     }
 }

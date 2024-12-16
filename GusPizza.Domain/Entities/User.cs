@@ -1,11 +1,11 @@
 namespace GusPizza.Domain.Entities;
 
-public class User
+public class User(string username, string passwordHash, string role)
 {
-    public Guid Id { get; set; }
-    public string Username { get; set; } = string.Empty;
-    public string PasswordHash { get; set; } = string.Empty;
-    public string Role { get; set; } = Roles.User.ToString();
+    public Guid Id { get; set; } = Guid.NewGuid();
+    public string Username { get; set; } = username;
+    public string PasswordHash { get; set; } = passwordHash;
+    public string Role { get; set; } = role;
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }

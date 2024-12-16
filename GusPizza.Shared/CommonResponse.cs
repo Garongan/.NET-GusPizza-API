@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.Contracts;
-
-namespace GusPizza.Shared;
+﻿namespace GusPizza.Shared;
 
 public class CommonResponse<T>
 {

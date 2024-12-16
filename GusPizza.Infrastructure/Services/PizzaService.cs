@@ -1,8 +1,8 @@
-using GusPizza.Application.Services.Interfaces;
+using GusPizza.Application.Services;
 using GusPizza.Domain.Entities;
 using GusPizza.Domain.Repositories;
 
-namespace GusPizza.Application.Services;
+namespace GusPizza.Infrastructure.Services;
 
 public class PizzaService(IPizzaRepository repository) : IPizzaService
 {
@@ -10,13 +10,12 @@ public class PizzaService(IPizzaRepository repository) : IPizzaService
 
     public async Task<Pizza> GetByIdAsync(Guid id)
     {
-        var pizza = await pizzaRepository.GetByIdAsync(id);
-        return pizza;
+        return await pizzaRepository.GetByIdAsync(id);
     }
 
-    public async Task<List<Pizza>> GetAllAsync()
+    public async Task<List<Pizza>> GetAllAsync(bool isDeleted)
     {
-        return await pizzaRepository.GetAllAsync();
+        return await pizzaRepository.GetAllAsync(isDeleted);
     }
 
     public async Task<Pizza> CreateAsync(string name, decimal price)

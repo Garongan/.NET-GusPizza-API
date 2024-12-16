@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GusPizza.Domain\GusPizza.Domain.csproj" />
-    <ProjectReference Include="..\GusPizza.Infrastructure\GusPizza.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace GusPizza.API.Migrations
+namespace GusPizza.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(AppDBContext))]
     [Migration("20241214072608_InitialCreate")]

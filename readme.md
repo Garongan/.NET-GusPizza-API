@@ -9,18 +9,16 @@
 
 # How to run this API locally
 
-- clone this project and run `dotnet restore`
-
-- run migrations using
+- clone this project and run
 
   ```bash
-  dotnet ef database update --project GusPizza.API
+  dotnet restore
   ```
 
-- undo the migrations
+- update your database schema with migrations using
 
   ```bash
-  dotnet ef migrations remove --project GusPizza.API
+  dotnet ef database update --project GusPizza.Infrastructure --startup-project GusPizza.API
   ```
 
 - run with
@@ -33,4 +31,12 @@
 
   ```bash
   dotnet watch --project GusPizza.API run --launch-profile https
+  ```
+
+# Additional info
+
+- example how to add migrations
+
+  ```bash
+  dotnet ef migrations add [migrations-name] --project GusPizza.Infrastructure --startup-project GusPizza.API
   ```

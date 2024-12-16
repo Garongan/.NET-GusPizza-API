@@ -1,6 +1,5 @@
 using GusPizza.Application.Dto;
-using GusPizza.Application.Services.Interfaces;
-using GusPizza.Domain;
+using GusPizza.Application.Services;
 using GusPizza.Infrastructure.Security;
 using GusPizza.Shared;
 using Microsoft.AspNetCore.Authorization;
@@ -15,6 +14,11 @@ namespace GusPizza.API.Controllers
         private readonly IUserService userService = service;
         private readonly IJwtTokenGenerator jwtTokenGenerator = jwtToken;
 
+        /// <summary>
+        /// Login account
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         [HttpPost("login")]
         [AllowAnonymous]
         public async Task<IActionResult> LoginAsync([FromBody] LoginDtoRequest request)
@@ -37,6 +41,24 @@ namespace GusPizza.API.Controllers
             response.Data = new LoginDtoResponse(token, user.Role.ToString());
 
             return Ok(response);
+        }
+
+        /// <summary>
+        /// Register user
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [HttpPost("register")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RegisterAsync([FromBody] UserDtoRequest request)
+        {
+            var user = await userService.AddAsync(request.Username, request.Password);
+            var response = CommonResponse<UserDtoResponse>.commonResponse(
+                StatusCodes.Status201Created,
+                "User created successfully",
+                new UserDtoResponse(user.Id, user.Username, user.Role, user.CreatedAt, user.UpdatedAt)
+            );
+            return Created($"api/auth/{user.Id}", response);
         }
     }
 }
