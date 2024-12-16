@@ -37,7 +37,7 @@ namespace GusPizza.API.Controllers
                 return Unauthorized(response);
             }
 
-            var token = jwtTokenGenerator.GenerateToken(user.Username, user.Role);
+            var token = jwtTokenGenerator.GenerateToken(user.Id, user.Username, user.Role);
             response.Data = new LoginDtoResponse(token, user.Role.ToString());
 
             return Ok(response);

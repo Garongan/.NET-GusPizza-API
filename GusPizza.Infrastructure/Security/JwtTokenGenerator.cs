@@ -8,17 +8,16 @@ namespace GusPizza.Infrastructure.Security;
 
 public interface IJwtTokenGenerator
 {
-    string GenerateToken(string username, string role);
+    string GenerateToken(Guid id, string username, string role);
 }
 
 public class JwtTokenGenerator(IConfiguration config) : IJwtTokenGenerator
 {
     private readonly IConfiguration configuration = config;
-    public string GenerateToken(string username, string role)
+    public string GenerateToken(Guid id, string username, string role)
     {
         var claims = new[]{
-            new Claim(JwtRegisteredClaimNames.Sub, username),
-            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+            new Claim(ClaimTypes.NameIdentifier, id.ToString()),
             new Claim(ClaimTypes.Name, username),
             new Claim(ClaimTypes.Role, role)
         };

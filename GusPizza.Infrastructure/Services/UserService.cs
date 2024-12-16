@@ -48,12 +48,13 @@ public class UserService(IUserRepository repository) : IUserService
         return newUser;
     }
 
-    public async Task UpdateAsync(Guid id, string username)
+    public async Task<User> UpdateAsync(Guid id, string username)
     {
         var user = await GetByIdAsync(id);
         user.Username = username;
         user.UpdatedAt = DateTime.UtcNow;
         await userRepository.UpdateAsync(user);
+        return user;
     }
 
     public async Task<User> GetByIdAsync(Guid id)

@@ -7,7 +7,7 @@ public interface IUserService
     Task<User?> AuthenticateAsync(string username, string password);
     Task AddAdminIfNoExistsAsync();
     Task<User> AddAsync(string username, string password);
-    Task UpdateAsync(Guid id, string username);
+    Task<User> UpdateAsync(Guid id, string username);
     Task<User> GetByIdAsync(Guid id);
     Task<List<User>> GetAllAsync();
 }

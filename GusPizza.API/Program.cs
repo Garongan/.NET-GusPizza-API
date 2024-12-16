@@ -46,7 +46,7 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "GusPizza API",
+        Title = ".NET GusPizza API",
         Version = "v1",
         Description = "Api for manage order pizza in GusPizza"
     });
@@ -87,7 +87,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         c.RoutePrefix = string.Empty;
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "GusPizza API v1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", ".NET GusPizza API v1");
     });
     app.UseHttpsRedirection();
     app.MapControllers();
