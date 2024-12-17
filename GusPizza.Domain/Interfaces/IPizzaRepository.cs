@@ -1,7 +1,7 @@
 
 using GusPizza.Domain.Entities;
 
-namespace GusPizza.Domain.Repositories;
+namespace GusPizza.Domain.Interfaces;
 
 public interface IPizzaRepository
 {

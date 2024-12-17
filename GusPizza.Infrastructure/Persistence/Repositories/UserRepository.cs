@@ -1,5 +1,5 @@
 using GusPizza.Domain.Entities;
-using GusPizza.Domain.Repositories;
+using GusPizza.Domain.Interfaces;
 using Microsoft.EntityFrameworkCore;
 
 namespace GusPizza.Infrastructure.Persistence.Repositories;

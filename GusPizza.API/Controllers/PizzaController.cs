@@ -1,5 +1,5 @@
-using GusPizza.Application;
-using GusPizza.Application.Services;
+using GusPizza.Application.Dto;
+using GusPizza.Application.Interfaces;
 using GusPizza.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -21,11 +21,10 @@ namespace GusPizza.API.Controllers
         public async Task<IActionResult> GetAllAsync(bool isDeleted)
         {
             var pizzas = await pizzaService.GetAllAsync(isDeleted);
-            var responses = pizzas.Select(p => new PizzaDtoResponse(p.Id, p.Name, p.Price, p.IsAvailable, p.CreatedAt, p.UpdatedAt, p.DeletedAt)).ToList();
             var response = CommonResponse<List<PizzaDtoResponse>>.commonResponse(
                 StatusCodes.Status200OK,
-                "List of pizzas retrieved successfully",
-                responses
+                "List of pizza retrieved successfully",
+                pizzas
             );
             return Ok(response);
         }
@@ -43,7 +42,7 @@ namespace GusPizza.API.Controllers
             var response = CommonResponse<PizzaDtoResponse>.commonResponse(
                 StatusCodes.Status201Created,
                 "Pizza created successfully",
-                new PizzaDtoResponse(pizza.Id, pizza.Name, pizza.Price, pizza.IsAvailable, pizza.CreatedAt, pizza.UpdatedAt, pizza.DeletedAt)
+                pizza
             );
             return Created($"api/pizzas/{pizza.Id}", response);
         }
@@ -59,8 +58,8 @@ namespace GusPizza.API.Controllers
             var pizza = await pizzaService.GetByIdAsync(id);
             var response = CommonResponse<PizzaDtoResponse>.commonResponse(
                 StatusCodes.Status200OK,
-                "Pizzas retrieved successfully",
-                new PizzaDtoResponse(pizza.Id, pizza.Name, pizza.Price, pizza.IsAvailable, pizza.CreatedAt, pizza.UpdatedAt, pizza.DeletedAt)
+                "Pizza retrieved successfully",
+                pizza
             );
             return Ok(response);
         }
@@ -78,7 +77,7 @@ namespace GusPizza.API.Controllers
             var response = CommonResponse<PizzaDtoResponse>.commonResponse(
                 StatusCodes.Status200OK,
                 "Pizza updated successfully",
-                new PizzaDtoResponse(pizza.Id, pizza.Name, pizza.Price, pizza.IsAvailable, pizza.CreatedAt, pizza.UpdatedAt, pizza.DeletedAt)
+                pizza
             );
             return Ok(response);
         }

@@ -1,6 +1,6 @@
 using System.Reflection;
 using GusPizza.API;
-using GusPizza.Application.Services;
+using GusPizza.Application.Interfaces;
 using GusPizza.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;

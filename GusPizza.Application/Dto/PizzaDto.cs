@@ -1,4 +1,4 @@
-namespace GusPizza.Application;
+namespace GusPizza.Application.Dto;
 
 public record PizzaDtoRequest(string Name, decimal Price);
 public record PizzaDtoResponse(

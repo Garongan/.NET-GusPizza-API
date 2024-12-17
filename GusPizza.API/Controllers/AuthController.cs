@@ -1,5 +1,5 @@
 using GusPizza.Application.Dto;
-using GusPizza.Application.Services;
+using GusPizza.Application.Interfaces;
 using GusPizza.Infrastructure.Security;
 using GusPizza.Shared;
 using Microsoft.AspNetCore.Authorization;
@@ -26,7 +26,7 @@ namespace GusPizza.API.Controllers
             var user = await userService.AuthenticateAsync(request.Username, request.Password);
             var response = CommonResponse<LoginDtoResponse>.commonResponse(
                 StatusCodes.Status200OK,
-                "",
+                "Login successfully",
                 new LoginDtoResponse("", "")
             );
 
@@ -56,7 +56,7 @@ namespace GusPizza.API.Controllers
             var response = CommonResponse<UserDtoResponse>.commonResponse(
                 StatusCodes.Status201Created,
                 "User created successfully",
-                new UserDtoResponse(user.Id, user.Username, user.Role, user.CreatedAt, user.UpdatedAt)
+                user
             );
             return Created($"api/auth/{user.Id}", response);
         }

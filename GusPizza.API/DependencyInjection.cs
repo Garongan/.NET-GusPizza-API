@@ -1,5 +1,5 @@
-using GusPizza.Application.Services;
-using GusPizza.Domain.Repositories;
+using GusPizza.Application.Interfaces;
+using GusPizza.Domain.Interfaces;
 using GusPizza.Infrastructure;
 using GusPizza.Infrastructure.Persistence.Repositories;
 using GusPizza.Infrastructure.Services;

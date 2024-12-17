@@ -1,7 +1,6 @@
-using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using GusPizza.Application.Dto;
-using GusPizza.Application.Services;
+using GusPizza.Application.Interfaces;
 using GusPizza.Shared;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,7 +27,7 @@ namespace GusPizza.API.Controllers
                 null
             );
 
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (userId == null)
             {
@@ -37,8 +36,7 @@ namespace GusPizza.API.Controllers
                 return BadRequest(response);
             }
 
-            var user = await userService.GetByIdAsync(Guid.Parse(userId));
-            response.Data = new UserDtoResponse(user.Id, user.Username, user.Role, user.CreatedAt, user.UpdatedAt);
+            response.Data = await userService.GetByIdAsync(Guid.Parse(userId));
             return Ok(response);
         }
 
@@ -56,7 +54,7 @@ namespace GusPizza.API.Controllers
                 null
             );
 
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
             if (userId == null)
             {
@@ -65,8 +63,24 @@ namespace GusPizza.API.Controllers
                 return BadRequest(response);
             }
 
-            var user = await userService.UpdateAsync(Guid.Parse(userId), request.Username);
-            response.Data = new UserDtoResponse(user.Id, user.Username, user.Role, user.CreatedAt, user.UpdatedAt);
+            response.Data = await userService.UpdateAsync(Guid.Parse(userId), request.Username);
+            return Ok(response);
+        }
+
+        /// <summary>
+        /// Get all user by admin
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> GetAllAsync()
+        {
+            var users = await userService.GetAllAsync();
+            var response = CommonResponse<List<UserDtoResponse>>.commonResponse(
+                StatusCodes.Status200OK,
+                "List of user retrieved successfully",
+                users
+            );
             return Ok(response);
         }
     }
