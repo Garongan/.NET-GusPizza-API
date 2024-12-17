@@ -16,7 +16,7 @@ public class TransactionRepository(AppDBContext dBContext) : ITransactionReposit
 
     public async Task<List<Transaction>> GetAllAsync()
     {
-        return await appDBContext.Transactions.ToListAsync();
+        return await appDBContext.Transactions.Include(t => t.TransactionDetails).ToListAsync();
     }
 
     public async Task<Transaction> GetByIdAsync(Guid id)

@@ -9,4 +9,5 @@ public class Pizza(string name, decimal price)
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     public DateTime? DeletedAt { get; set; } = null;
+    public List<TransactionDetail>? TransactionDetails { get; set; }
 }

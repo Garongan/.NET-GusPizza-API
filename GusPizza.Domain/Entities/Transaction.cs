@@ -8,5 +8,5 @@ public class Transaction(Guid userId, DateTime transactionAt)
     public Guid UserId { get; set; } = userId;
     public DateTime TransactionAt { get; set; } = transactionAt;
     public decimal Total { get; set; } = 0;
-    public List<TransactionDetail> TransactionDetails {get; set;} = [];
+    public List<TransactionDetail> TransactionDetails { get; set; } = [];
 }

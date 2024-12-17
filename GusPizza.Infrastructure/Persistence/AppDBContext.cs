@@ -38,12 +38,20 @@ public class AppDBContext(DbContextOptions<AppDBContext> options) : DbContext(op
         var transactionDetail = modelBuilder.Entity<TransactionDetail>();
         transactionDetail.HasKey(td => td.Id);
         transactionDetail.Property(td => td.TransactionId).IsRequired();
-        transactionDetail.Property(td => td.ItemName).IsRequired();
+        transactionDetail.Property(td => td.PizzaId).IsRequired();
         transactionDetail.Property(td => td.Quantity).IsRequired();
         transactionDetail.Property(td => td.Price).IsRequired();
 
         // Relation of transaction and transaction detail
-        transaction.HasMany(t => t.TransactionDetails).WithOne(td => td.Transaction).HasForeignKey(td => td.TransactionId);
+        transaction
+            .HasMany(t => t.TransactionDetails)
+            .WithOne(td => td.Transaction)
+            .HasForeignKey(td => td.TransactionId);
+
+        transactionDetail
+            .HasOne(td => td.Pizza)
+            .WithMany(p => p.TransactionDetails)
+            .HasForeignKey(td => td.PizzaId);
 
         base.OnModelCreating(modelBuilder);
     }
